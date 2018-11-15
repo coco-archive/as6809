@@ -1,0 +1,18 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Executables
+*.exe
+*.out
+*.app
+
+/asxv5pxx/asxmak/turboc30/
+/asxv5pxx/asxmak/symantec/
+/asxv5pxx/asxmak/linux/exe/
+/asxv5pxx/asxmak/tee16.com
+/asxv5pxx/as78k0s/save/
+/asxv5pxx/asxmak/*/build/backup/
+/asxv5pxx/asxmak/*/build/misc/
