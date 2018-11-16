@@ -5,7 +5,7 @@
 #define FILSPC      (NINPUT+10)        /* File spec length */
 #define MAXHASHBIT  16                 /* Maximum bits for a hash table */
 #define NOFORMFEED  1                  /* Disable form feed in listing */
-#define M6809STRICT 1                  /* No opcode compatibility */
+#define M6809STRICT 0                  /* No opcode compatibility */
 
 /*
  * To include NoICE Debugging set non-zero
