@@ -1,5 +1,5 @@
 @echo off
-REM _PREP.BAT
+REM _prep.bat
 REM   Remove all build files.
 REM
 
@@ -10,190 +10,263 @@ goto ASXXXX
 
 :ALL
 cd as1802
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as2650
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as430
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
+cd ..
+cd as6100
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as61860
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as6500
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as6800
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as6801
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as6804
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as6805
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as6808
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as6809
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as6811
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as6812
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as6816
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as740
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
+cd ..
+cd as78k0s
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as8048
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as8051
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as8085
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd as8xcxxx
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd asavr
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd ascheck
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd asez80
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd asf2mc8
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
+cd ..
+cd asf8
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd asgb
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd ash8
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd asm8c
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd aspic
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd asrab
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd asscmp
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
+cd ..
+cd asst6
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
+cd ..
+cd asst7
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
+cd ..
+cd asst8
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd asz8
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd asz80
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd aslink
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd asxcnv
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd asxscn
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
 cd s19os9
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
-del ..\misc\*.lst
+del /q ..\misc\*.lst
 goto EXIT
 
 :ASXXXX
 cd %1
 if not exist %1.vcproj goto ERROR
-del *.opt
-del /a:h *.suo
-del /q .\release\*.*
+del /q *.ncb
+del /q *.user
+rmdir /s /q .\debug
+rmdir /s /q .\release
 cd ..
+del /q ..\misc\%1.lst
 goto EXIT
 
 :ERROR
@@ -204,13 +277,13 @@ echo Valid arguments are:
 echo --------  --------  --------  --------  --------  --------
 echo all       ==        'blank'
 echo --------  --------  --------  --------  --------  --------
-echo as1802    as2650    as430     as740     as61860
-echo as6500    as6800    as6801    as6804    as6805
-echo as6808    as6809    as6811    as6812    as6816
-echo as8048    as8051    as8085    as8xcxxx
-echo asz8      asz80     asez80    asgb      asrab
-echo ash8      asf2mc8   asm8c     aspic     asavr
-echo ascheck   asscmp
+echo as1802    as2650    as430     as6100    as61860   as6500
+echo as6800    as6801    as6804    as6805    as6808    as6809
+echo as6811    as6812    as6816    as740     as78k0s   as8048
+echo as8051    as8085    as8xcxxx  asavr     ascheck   asez80
+echo asf2mc8   asf8      asgb      ash8      asm8c     aspic
+echo asrab     asscmp    asst6     asst7     asst8     asz8
+echo asz80     
 echo --------  --------  --------  --------  --------  --------
 echo aslink    asxcnv    asxscn    s19os9
 echo --------  --------  --------  --------  --------  --------

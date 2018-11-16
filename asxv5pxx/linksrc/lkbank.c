@@ -1,7 +1,7 @@
 /* lkbank.c */
 
 /*
- *  Copyright (C) 2001-2009  Alan R. Baldwin
+ *  Copyright (C) 2001-2014  Alan R. Baldwin
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -472,6 +472,7 @@ lkfopen()
 	char * frmt;
 	char str[NCPS+NCPS];
 	struct bank *tbp;
+	struct sym *sp;
 	FILE * fp;
 
 	if (oflag == 0) return;
@@ -490,6 +491,15 @@ lkfopen()
 		}
 		bp->b_fspec = strsto(str);
 		str[idx] = 0;
+	}
+
+	/*
+	 * If .__.END. is defined force
+	 * an output file to be opened.
+	 */
+	sp = lkpsym(".__.END.", 0);
+	if (sp) {
+		sp->s_axp->a_bap->a_flag |= A4_OUT;
 	}
 
 	/*
@@ -547,7 +557,7 @@ lkfopen()
 					case 3: frmt = "bi3"; break;
 					case 4: frmt = "bi4"; break;
 					}
-					fp = afile(bp->b_fspec, frmt, 2);
+					fp = afile(bp->b_fspec, frmt, 3);
 				}
 				if (fp != stderr) {
 					if (fp == NULL) {
@@ -616,18 +626,6 @@ lkfclose()
 			lkout(0);
 			if (ofp != stderr) {
 				fclose(ofp);
-#if 0
-				/*
-				 * Remove files with no data
-				 */
-				if (bp->b_oflag == 0) {
-#ifdef	OTHERSYSTEM
-					remove(bp->b_ofspec);
-#else
-					delete(bp->b_ofspec);
-#endif
-				}
-#endif
 			}
 			/*
 			 * Scan bank structure for

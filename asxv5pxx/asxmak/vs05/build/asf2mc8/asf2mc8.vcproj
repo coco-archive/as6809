@@ -17,7 +17,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			IntermediateDirectory="$(temp)\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -109,7 +109,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			IntermediateDirectory="$(temp)\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -407,7 +407,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\asf2mc8\f8adr.c"
+				RelativePath="..\..\..\..\asf2mc8\f2mc8adr.c"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -427,7 +427,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\asf2mc8\f8mch.c"
+				RelativePath="..\..\..\..\asf2mc8\f2mc8mch.c"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -447,7 +447,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\asf2mc8\f8pst.c"
+				RelativePath="..\..\..\..\asf2mc8\f2mc8pst.c"
 				>
 				<FileConfiguration
 					Name="Release|Win32"

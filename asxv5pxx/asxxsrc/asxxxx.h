@@ -1,7 +1,7 @@
 /* asxxxx.h */
 
 /*
- *  Copyright (C) 1989-2009  Alan R. Baldwin
+ *  Copyright (C) 1989-2014  Alan R. Baldwin
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -44,12 +44,14 @@
 #include <stdio.h>
 #include <setjmp.h>
 #include <string.h>
+#include <time.h>
 
 /*
  * Local Definitions
  */
 
-#define	VERSION	"V05.00"
+#define	VERSION	"V05.10"
+#define	COPYRIGHT "2014"
 
 /*
  * To include NoICE Debugging set non-zero
@@ -171,6 +173,9 @@
 #define	BLIST	3		/* Address only with allocation */
 #define CLIST	4		/* Code */
 #define	ELIST	5		/* Equate only */
+#define	ILIST	6		/* IF conditional evaluation */
+
+#define	HLR_NLST	0x0080	/* For HLR file only */
 
 #define	LIST_ERR	0x0001	/* Error Code(s) */
 #define	LIST_LOC	0x0002	/* Location */
@@ -212,6 +217,11 @@
  */
 #define	OPCY_NONE	((char) 0x80)	/* Opcode Cycle Count Not Set */
 #define	OPCY_MASK	((char) 0x7F)	/* Opcode Cycle Count MASK */
+
+/*
+ * Default Page Length Mask
+ */
+#define	DEFAULT_PMASK	0xFF	/* 256 Element Boundary / Length */ 
 
 /*
  * NTXT must be defined to have the same value in
@@ -975,19 +985,21 @@ extern	int	page;		/*	current page number
 				 */
 extern	int	lop;		/*	current line number on page
 				 */
+extern	time_t	curtim;		/*	pointer to the current time string
+				 */
 extern	int	pass;		/*	assembler pass number
 				 */
 extern	int	aflag;		/*	-a, make all symbols global flag
 				 */
 extern	int	bflag;		/*	-b(b), listing mode flag
 				 */
-extern	int	cflag;		/*	-c, include cycle counts in listing flag
+extern	int	cflag;		/*	-c, disable cycle counts in listing flag
 				 */
 extern	int	fflag;		/*	-f(f), relocations flagged flag
 				 */
 extern	int	gflag;		/*	-g, make undefined symbols global flag
 				 */
-extern	int	hflag;		/*	-h, diagnostic help printouts
+				/*	-h, usage help listed
 				 */
 
 #if NOICE
@@ -1001,11 +1013,17 @@ extern	int	oflag;		/*	-o, generate relocatable output flag
 				 */
 extern	int	pflag;		/*	-p, disable listing pagination
 				 */
+extern	int	rflag;		/*	-r, put line numbers in hint file for .lst to .rst
+				 */
 extern	int	sflag;		/*	-s, generate symbol table flag
+				 */
+extern	int	tflag;		/*	-t, output diagnostic parameters from assembler
 				 */
 extern	int	uflag;		/*	-u, disable .list/.nlist processing flag
 				 */
-extern	int	wflag;		/*	-w, enable wide format listing
+extern	int	vflag;		/*	-v, enable out of range signed / unsigned errors
+				 */
+extern	int	wflag;		/*	-w, enable wide listing format
 				 */
 extern	int	xflag;		/*	-x, listing radix flag
 				 */
@@ -1025,6 +1043,8 @@ extern	a_uint	s_mask;		/*	Sign Mask
 				 */
 extern	a_uint	v_mask;		/*	Value Mask
 				 */
+extern	a_uint	p_mask;		/*	Page Mask
+				 */
 extern	int	as_msb;		/*	current MSB byte select
 				 *	0 == low byte
 				 *	1 == high byte
@@ -1039,6 +1059,9 @@ extern	a_uint	fuzz;		/*	tracks pass to pass changes in the
 				 *	variable length instruction formats
 				 */
 extern	int	lmode;		/*	listing mode
+				 */
+extern	char *	eqt_area;	/*	pointer to the area name
+				 *	associated with lmode = ELIST
 				 */
 extern	char	txt[NTXT];	/*	T Line Values
 				 */
@@ -1103,6 +1126,8 @@ extern	char	symtbl[];	/*	string "Symbol Table"
 extern	char	aretbl[];	/*	string "Area Table"
 				 */
 extern	char	module[NCPS+2];	/*	module name string
+				 */
+extern	FILE	*hfp;		/*	.lst to .rst hint file handle
 				 */
 extern	FILE	*lfp;		/*	list output file handle
 				 */
@@ -1183,12 +1208,12 @@ extern	int		get(void);
 extern	int		getdlm(void);
 extern	VOID		getdstr(char *str, int slen);
 extern	VOID		getid(char *id, int c);
-extern	int		getline(void);
 extern	int		getmap(int d);
 extern	int		getnb(void);
 extern	int		getlnm(void);
 extern	VOID		getst(char *id, int c);
 extern	int		more(void);
+extern	int		nxtline(void);
 extern	int		replace(char *id);
 extern	VOID		scanline(void);
 extern	VOID		unget(int c);
@@ -1224,9 +1249,10 @@ extern	a_uint		absexpr(void);
 extern	VOID		clrexpr(struct expr *esp);
 extern	int		digit(int c, int r);
 extern	VOID		exprmasks(int n);
-extern	int		is_abs(struct expr *esp);
 extern	VOID		expr(struct expr *esp, int n);
+extern	int		is_abs(struct expr *esp);
 extern	int		oprio(int c);
+extern	a_uint		rngchk(a_uint n);
 extern	VOID		term(struct expr *esp);
 
 /* asdbg */
@@ -1236,8 +1262,9 @@ extern	VOID		DefineSDCC_Line(void);
 
 /* aslist.c */
 extern	VOID		list(void);
-extern	VOID		list1(char *wp, int *wpt, int nb, int n, int f, int g);
+extern	VOID		list1(char *wp, int *wpt, int nb);
 extern	VOID		list2(int t);
+extern	VOID		listhlr(int hlr_lst, int hlr_mode, int hlr_nb);
 extern	VOID		lstsym(FILE *fp);
 extern	VOID		slew(FILE *fp, int flag);
 
@@ -1360,12 +1387,12 @@ extern	int		get();
 extern	int		getdlm();
 extern	VOID		getdstr();
 extern	VOID		getid();
-extern	int		getline();
 extern	int		getmap();
 extern	int		getnb();
 extern	int		getlnm();
 extern	VOID		getst();
 extern	int		more();
+extern	int		nxtline();
 extern	int		replace();
 extern	VOID		scanline();
 extern	VOID		unget();
@@ -1401,9 +1428,10 @@ extern	a_uint		absexpr();
 extern	VOID		clrexpr();
 extern	int		digit();
 extern	VOID		exprmasks();
-extern	int		is_abs();
 extern	VOID		expr();
+extern	int		is_abs();
 extern	int		oprio();
+extern	a_uint		rngchk();
 extern	VOID		term();
 
 /* asdbg */
@@ -1415,6 +1443,7 @@ extern	VOID		DefineSDCC_Line();
 extern	VOID		list();
 extern	VOID		list1();
 extern	VOID		list2();
+extern	VOID		listhlr();
 extern	VOID		lstsym();
 extern	VOID		slew();
 

@@ -35,6 +35,12 @@ cd as430
 @echo off
 type as430.log
 cd ..
+cd as6100
+@echo on
+%MS$DEV% as6100.dsw /MAKE "as6100 - Win32 Release" /REBUILD /OUT as6100.log
+@echo off
+type as6100.log
+cd ..
 cd as61860
 @echo on
 %MS$DEV% as61860.dsw /MAKE "as61860 - Win32 Release" /REBUILD /OUT as61860.log
@@ -107,6 +113,12 @@ cd as740
 @echo off
 type as740.log
 cd ..
+cd as78k0s
+@echo on
+%MS$DEV% as78k0s.dsw /MAKE "as78k0s - Win32 Release" /REBUILD /OUT as78k0s.log
+@echo off
+type as78k0s.log
+cd ..
 cd as8048
 @echo on
 %MS$DEV% as8048.dsw /MAKE "as8048 - Win32 Release" /REBUILD /OUT as8048.log
@@ -155,6 +167,12 @@ cd asf2mc8
 @echo off
 type asf2mc8.log
 cd ..
+cd asf8
+@echo on
+%MS$DEV% asf8.dsw /MAKE "asf8 - Win32 Release" /REBUILD /OUT asf8.log
+@echo off
+type asf8.log
+cd ..
 cd asgb
 @echo on
 %MS$DEV% asgb.dsw /MAKE "asgb - Win32 Release" /REBUILD /OUT asgb.log
@@ -190,6 +208,24 @@ cd asscmp
 %MS$DEV% asscmp.dsw /MAKE "asscmp - Win32 Release" /REBUILD /OUT asscmp.log
 @echo off
 type asscmp.log
+cd ..
+cd asst6
+@echo on
+%MS$DEV% asst6.dsw /MAKE "asst6 - Win32 Release" /REBUILD /OUT asst6.log
+@echo off
+type asst6.log
+cd ..
+cd asst7
+@echo on
+%MS$DEV% asst7.dsw /MAKE "asst7 - Win32 Release" /REBUILD /OUT asst7.log
+@echo off
+type asst7.log
+cd ..
+cd asst8
+@echo on
+%MS$DEV% asst8.dsw /MAKE "asst8 - Win32 Release" /REBUILD /OUT asst8.log
+@echo off
+type asst8.log
 cd ..
 cd asz8
 @echo on
@@ -247,13 +283,13 @@ echo Valid arguments are:
 echo --------  --------  --------  --------  --------  --------
 echo all       ==        'blank'
 echo --------  --------  --------  --------  --------  --------
-echo as1802    as2650    as430     as740     as61860
-echo as6500    as6800    as6801    as6804    as6805
-echo as6808    as6809    as6811    as6812    as6816
-echo as8048    as8051    as8085    as8xcxxx
-echo asz8      asz80     asez80    asgb      asrab
-echo ash8      asf2mc8   asm8c     aspic     asavr
-echo ascheck   asscmp
+echo as1802    as2650    as430     as6100    as61860   as6500
+echo as6800    as6801    as6804    as6805    as6808    as6809
+echo as6811    as6812    as6816    as740     as78k0s   as8048
+echo as8051    as8085    as8xcxxx  asavr     ascheck   asez80
+echo asf2mc8   asf8      asgb      ash8      asm8c     aspic
+echo asrab     asscmp    asst6     asst7     asst8     asz8
+echo asz80     
 echo --------  --------  --------  --------  --------  --------
 echo aslink    asxcnv    asxscn    s19os9
 echo --------  --------  --------  --------  --------  --------

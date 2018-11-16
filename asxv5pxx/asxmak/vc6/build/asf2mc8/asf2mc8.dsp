@@ -126,15 +126,15 @@ SOURCE=..\..\..\..\asxxsrc\assym.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\asf2mc8\f8adr.c
+SOURCE=..\..\..\..\asf2mc8\f2mc8adr.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\asf2mc8\f8mch.c
+SOURCE=..\..\..\..\asf2mc8\f2mc8mch.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\asf2mc8\f8pst.c
+SOURCE=..\..\..\..\asf2mc8\f2mc8pst.c
 # End Source File
 # End Group
 # Begin Group "Header Files"
