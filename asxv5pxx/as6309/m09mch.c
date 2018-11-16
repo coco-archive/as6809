@@ -25,7 +25,7 @@
 #include "asxxxx.h"
 #include "m6809.h"
 
-char	*cpu	= "Motorola 6809";
+char	*cpu	= "Hitachi 6309";
 char	*dsft	= "asm";
 
 #define	NB	512
@@ -290,6 +290,9 @@ struct mne *mp;
 		genout(cpg, op, rf, &e1);
 		break;
 
+	case S_STR2:
+		cpg += 0x01;
+
 	case S_STR1:
 		cpg += 0x10;
 
@@ -322,6 +325,12 @@ struct mne *mp;
 		}
 		aerr();
 		break;
+
+	case S_IMM2:
+		cpg += 0x01;
+
+	case S_IMM1:
+		cpg += 0x10;
 
 	case S_CC:
 		t1 = addr(&e1);

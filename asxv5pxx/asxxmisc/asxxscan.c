@@ -110,8 +110,6 @@ char *argv[];
 	vlines = 0;
 	aserr = 0;
 
-	printf("\n");
-
 	for (i=1; i<argc; ++i) {
 		p = argv[i];
 		if (*p == '-') {
@@ -156,14 +154,14 @@ char *argv[];
 				}
 		} else {
 			if (++inpfil > 1) {
-				printf("?ASXSCN-E-Too many input files\n\n");
+				fprintf(stderr, "Too many input files\n");
 				asexit(ER_FATAL);
 			}
 			sfp[0] = fopen(p, "r");
 			if (sfp[0] != NULL) {
 				strcpy(scfile, p);
 			} else {
-				printf("?ASXSCN-E-File %s not found\n\n", p);
+				fprintf(stderr, "File %s not found\n", p);
 				asexit(ER_FATAL);
 			}
 		}
@@ -315,7 +313,7 @@ loop:
 				case 1:
 					if (iflag) { break; }
 				case 2:
-					printf("''%s''\r\n", scline);
+					fprintf(stderr, "''%s''\n", scline);
 					aserr += 1;
 					goto loop;
 				}
@@ -325,9 +323,9 @@ loop:
 		}
 	}
 	if (vlines) {
-		printf("%d code error(s) found in file %s\n\n", aserr, scfile);
+		printf("%d code error(s) found in file %s\n", aserr, scfile);
 	} else {
-		printf("?ASXSCN-E-Invalid File Format\n\n");
+		fprintf(stderr,"Invalid File Format\n");
 		aserr += 1;
 	}
 	asexit(aserr ? ER_ERROR : ER_NONE);
@@ -459,7 +457,7 @@ char *usetxt[] = {
 	"  d    decimal listing",
 	"  q    octal   listing",
 	"  x    hex     listing (default)",
-        "  2    16-Bit  address (default)",
+	"  2    16-Bit  address (default)",
 	"  3    24-Bit  address",
 	"  4    32-Bit  address",
 	"  i    ignore relocation flags",
@@ -495,9 +493,9 @@ int n;
 {
 	char **dp;
 
-	fprintf(stderr, "\nASxxxx Assembler Listing Scanner %s", VERSION);
-	fprintf(stderr, "\nCopyright (C) 2009  Alan R. Baldwin");
-	fprintf(stderr, "\nThis program comes with ABSOLUTELY NO WARRANTY.\n\n");
+	fprintf(stderr, "ASxxxx Assembler Listing Scanner " VERSION "\n");
+	fprintf(stderr, "Copyright (C) " COPYRIGHT " Alan R. Baldwin\n");
+	fprintf(stderr, "This program comes with ABSOLUTELY NO WARRANTY.\n\n");
 	for (dp = usetxt; *dp; dp++)
 		fprintf(stderr, "%s\n", *dp);
 	asexit(n);

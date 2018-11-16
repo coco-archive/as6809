@@ -23,7 +23,7 @@
  */
 
 /*)BUILD
-	$(PROGRAM) =	AS6809
+	$(PROGRAM) =	AS6309
 	$(INCLUDE) = {
 		ASXXXX.H
 		M6809.H
@@ -81,11 +81,16 @@
 #define	S_INH2	55
 #define	S_INH1	56
 #define	S_INH	57
+#define	S_LRQ	58
+#define	S_IR	59
+#define	S_IMM1	60
+#define	S_IMM2	61
+#define	S_STR2	62
 
 /*
  * Other Information
  */
-#define	S_FLAG	60
+#define	S_FLAG	69
 
 /*
  * 6800 Instruction types

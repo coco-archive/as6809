@@ -23,6 +23,7 @@
  */
 
 #include "aslink.h"
+#include <stdarg.h>
 
 /*)Module	lkmain.c
  *
@@ -37,7 +38,7 @@
  *		VOID	bassav()
  *		VOID	gblsav()
  *		int	intsiz()
- *		VOID	link()
+ *		VOID	lklink()
  *		VOID	lkexit()
  *		int	fndext()
  *		int	fndidx()
@@ -47,6 +48,9 @@
  *		VOID	doparse()
  *		VOID	setgbl()
  *		VOID	usage()
+ *		VOID	lkerror()
+ *		VOID	lkwarning()
+ *		VOID	lkinfo()
  *
  *	lkmain.c contains the following local variables:
  *		char *	usetext[]	array of pointers to the
@@ -119,7 +123,7 @@
  *		int	fclose()	c_library
  *		int	fprintf()	c_library
  *		VOID	library()	lklibr.c
- *		VOID	link()		lkmain.c
+ *		VOID	lklink()	lkmain.c
  *		VOID	lkexit()	lkmain.c
  *		VOID	lkfopen()	lkbank.c
  *		VOID	lnkarea()	lkarea.c
@@ -136,6 +140,7 @@
  *		VOID	symdef()	lksym.c
  *		time_t	time()		c_library
  *		VOID	usage()		lkmain.c
+ *		VOID	lkerror()	lkmain.c
  *
  *	side effects:
  *		Completion of main() completes the linking process
@@ -152,11 +157,8 @@ char *argv[];
 	int c, i, j, k;
 
 	if (intsiz() < 4) {
-		fprintf(stderr, "?ASlink-Error-Size of INT32 is not 32 bits or larger.\n\n");
-		exit(ER_FATAL);
+		lkerror("Size of INT32 is not 32 bits or larger");
 	}
-
-	fprintf(stdout, "\n");
 
 	startp = (struct lfile *) new (sizeof (struct lfile));
 	startp->f_idp = "";
@@ -190,6 +192,8 @@ char *argv[];
 
 				case 'f':
 				case 'F':
+					if (i+1 >= argc)
+						lkerror("Missing argument to option -%c", c);
 					strcat(ip, " ");
 					strcat(ip, argv[++i]);
 					break;
@@ -263,7 +267,7 @@ char *argv[];
 
 		while (nxtline()) {
 			ip = ib;
-			link();
+			lklink();
 		}
 		if (pass == 0) {
 			/*
@@ -391,9 +395,9 @@ int i;
 	exit(i);
 }
 
-/*)Function	link()
+/*)Function	lklink()
  *
- *	The function link() evaluates the directives for each line of
+ *	The function lklink() evaluates the directives for each line of
  *	text read from the .rel file(s).  The valid directives processed
  *	are:
  *		X, D, Q, H, G, B, M, A, S, T, R, and P.
@@ -433,7 +437,7 @@ int i;
  */
 
 VOID
-link()
+lklink()
 {
 	int c;
 
@@ -658,7 +662,7 @@ map()
 	 */
 	mfp = afile(linkp->f_idp, "map", 1);
 	if (mfp == NULL) {
-		lkexit(ER_FATAL);
+		lkerror(NULL);
 	}
 
 	/*
@@ -732,7 +736,11 @@ map()
 			gsp = gsp->g_globl;
 		}
 	}
+#if NOFORMFEED
+	fprintf(mfp, "\n");
+#else
 	fprintf(mfp, "\n\f");
+#endif
 	chkbank(mfp);
 	symdef(mfp);
 }
@@ -761,6 +769,8 @@ map()
  *		int	mflag		Map output flag
  *		int	oflag		Output file type flag
  *		int	objflg		Linked file/library output object flag
+ *		int	aflag		add only the first library found
+ *		int	rflag		disallow multiple defined symbol
  *		int	pflag		print linker command file flag
  *		FILE *	stderr		c_library
  *		int	uflag		Relocated listing flag
@@ -778,7 +788,6 @@ map()
  *		VOID	gblsav()	lkmain.c
  *		VOID	getfid()	lklex.c
  *		int	get()		lklex.c
- *		int	getnb()		lklex.c
  *		int	getnb()		lklex.c
  *		VOID	lkexit()	lkmain.c
  *		char *	new()		lksym.c
@@ -898,6 +907,16 @@ parse()
 					pflag = 0;
 					break;
 
+				case 'a':
+				case 'A':
+					aflag = 1;
+					break;
+
+				case 'r':
+				case 'R':
+					rflag = 1;
+					break;
+
 				case 'p':
 				case 'P':
 					pflag = 1;
@@ -941,8 +960,7 @@ parse()
 					break;
 
 				default:
-					fprintf(stderr,
-					    "Unkown option -%c ignored\n", c);
+					lkinfo("Unkown option -%c ignored", c);
 					break;
 				}
 			}
@@ -986,8 +1004,7 @@ parse()
 			lfp->f_idx = fndidx(p);
 			lfp->f_obj = objflg;
 		} else {
-			fprintf(stderr, "Invalid input");
-			lkexit(ER_FATAL);
+			lkerror("Invalid input");
 		}
 	}
 	return(0);
@@ -1112,6 +1129,7 @@ bassav()
  *				 	globl structure
  *		char	*ip		pointer into the REL file
  *				 	text line in ib[]
+ *		int	lkerr		error flag
  *
  *	functions called:
  *		int	getnb()		lklex.c
@@ -1189,22 +1207,19 @@ setgbl()
 			v = (int) expr(0);
 			sp = lkpsym(id, 0);
 			if (sp == NULL) {
-				fprintf(stderr,
+				lkwarning(
 				"No definition of symbol %s\n", id);
-				lkerr++;
 			} else {
 				if (sp->s_type & S_DEF) {
-					fprintf(stderr,
+					lkwarning(
 					"Redefinition of symbol %s\n", id);
-					lkerr++;
 					sp->s_axp = NULL;
 				}
 				sp->s_addr = v;
 				sp->s_type |= S_DEF;
 			}
 		} else {
-			fprintf(stderr, "No '=' in global expression");
-			lkerr++;
+			lkwarning("No '=' in global expression\n");
 		}
 		gsp = gsp->g_globl;
 	}
@@ -1268,8 +1283,7 @@ int wf;
 	FILE *fp;
 
 	if (strlen(fn) > (FILSPC-7)) {
-		fprintf(stderr, "?ASlink-Error-<filspc to long> : \"%s\"\n", fn);
-		lkerr++;
+		lkwarning("Filename to long: \"%s\"\n", fn);
 		return(NULL);
 	}
 
@@ -1322,10 +1336,9 @@ int wf;
 	}
 	if ((fp = fopen(afspec, frmt)) == NULL) {
 		if (wf < 4) {
-			fprintf(stderr, "?ASlink-Error-<cannot %s> : \"%s\"\n", (frmt[0] == 'w')?"create":"open", afspec);
-			lkerr++;
+			lkwarning("Cannot %s \"%s\"\n", (frmt[0] == 'w')?"create":"open", afspec);
 		} else {
-			fprintf(stderr, "?ASlink-Warning-<cannot %s> : \"%s\"\n", (frmt[0] == 'w')?"create":"open", afspec);
+			lkinfo("Cannot %s \"%s\"\n", (frmt[0] == 'w')?"create":"open", afspec);
 		}
 	}
 	return (fp);
@@ -1420,7 +1433,8 @@ char *usetxt[] = {
 	"Alternates to Command Line Input:",
 	"  -c                   ASlink >> prompt input",
 	"  -f   file[.lnk]      Command File input",
-	"Librarys:",
+	"Libraries:",
+	"  -a   Add only the first library found",
 	"  -k   Library path specification, one per -k",
 	"  -l   Library file specification, one per -l",
 	"Relocation:",
@@ -1446,7 +1460,8 @@ char *usetxt[] = {
 	"  -v   Linked file/library object output disable",
 	"List:",
 	"  -u   Update listing file(s) with link data as file(s)[.rst]",
-	"Case Sensitivity:",
+	"Symbols:",
+	"  -r   Disable Multiple Defined Symbols",
 	"  -z   Disable Case Sensitivity for Symbols",
 	"End:",
 	"  -e   or null line terminates input",
@@ -1479,12 +1494,69 @@ VOID
 usage(n)
 int n;
 {
-	char	**dp;
+	char **dp;
 
-	fprintf(stderr, "\nASxxxx Linker %s", VERSION);
-	fprintf(stderr, "\nCopyright (C) %s  Alan R. Baldwin", COPYRIGHT);
-	fprintf(stderr, "\nThis program comes with ABSOLUTELY NO WARRANTY.\n\n");
+	fprintf(stderr, "ASxxxx Linker " VERSION "\n");
+	fprintf(stderr, "Copyright (C) " COPYRIGHT " Alan R. Baldwin\n");
+	fprintf(stderr, "This program comes with ABSOLUTELY NO WARRANTY.\n\n");
 	for (dp = usetxt; *dp; dp++)
 		fprintf(stderr, "%s\n", *dp);
 	lkexit(n);
+}
+
+/*)Function	VOID	lkerror(const char *format, ...)
+ *
+ *		const char * format	string format
+ *		...			parameters if any
+ *
+*/
+
+VOID
+lkerror(const char *format, ...)
+{
+	if (format != NULL) {
+		va_list ap;
+		fprintf(stderr, "?ASlink-Error: ");
+		va_start(ap, format);
+		vfprintf(stderr, format, ap);
+		va_end(ap);
+		fprintf(stderr, "\n");
+	}
+	lkexit(ER_FATAL);
+}
+
+/*)Function	VOID	lkwarning(const char *format, ...)
+ *
+ *		const char * format	string format
+ *		...			parameters if any
+ *
+*/
+
+VOID
+lkwarning(const char *format, ...)
+{
+	va_list ap;
+	fprintf(stderr, "?ASlink-Warning: ");
+	va_start(ap, format);
+	vfprintf(stderr, format, ap);
+	va_end(ap);
+	lkerr++;
+}
+
+/*)Function	VOID	lkinfo(const char *format, ...)
+ *
+ *		const char * format	string format
+ *		...			parameters if any
+ *
+*/
+
+VOID
+lkinfo(const char *format, ...)
+{
+	va_list ap;
+	fprintf(stderr, "?ASlink-Info: ");
+	va_start(ap, format);
+	vfprintf(stderr, format, ap);
+	va_end(ap);
+	fprintf(stderr, "\n");
 }

@@ -231,7 +231,7 @@ int	fflag;		/*	-f(f), relocations flagged flag
 			 */
 int	gflag;		/*	-g, make undefined symbols global flag
 			 */
-			/*	-h, diagnostic help printout flag
+			/*	-h, usage help listed
 			 */
 int	jflag;		/*	-j, enable NoICE Debug Symbols
 			 */

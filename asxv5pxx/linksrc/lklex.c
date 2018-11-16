@@ -411,7 +411,7 @@ int d;
  *		int	fprintf()	c_library
  *		VOID	gethlr()	lklist.c
  *		VOID	lkulist()	lklist.c
- *		VOID	lkexit()	lkmain.c
+ *		VOID	lkerror()	lkmain.c
  *		VOID	SDCDBcopy()	lksdcdb.c
  *
  *	side effects:
@@ -469,18 +469,17 @@ loop:	if (cfp && cfp->f_type == F_STD)
 
 #if SDCDB
 				if (sfp && (pass == 0)) {
-				  SDCDBcopy(fid);
+				  SDCDBcopy(fid, NULL);
 				}
 #endif
 
 				gline = 1;
 				hline = 1;
 			} else {
-				fprintf(stderr, "Invalid file type\n");
-				lkexit(ER_FATAL);
+				lkerror("Invalid file type");
 			}
 			if (sfp == NULL) {
-				lkexit(ER_FATAL);
+				lkerror(NULL);
 			}
 			goto loop;
 		} else {
@@ -581,6 +580,19 @@ VOID
 chopcrlf(str)
 char *str;
 {
+#ifdef __unix__
+	int len;
+
+	len = strlen(str);
+	if (len > 0) {
+		if (str[len-1] == '\n')
+			str[--len] = 0;
+		if (len > 0) {
+			if (str[--len] == '\r')
+				str[len] = 0;
+		}
+	}
+#else
 	char *p;
 	char c;
 
@@ -591,5 +603,6 @@ char *str;
 			p--;
 		}
 	} while (c != 0);
+#endif
 }
 

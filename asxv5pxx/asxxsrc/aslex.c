@@ -764,6 +764,9 @@ loop:	if (asmc == NULL) return(0);
 		break;
 	}
 	chopcrlf(ib);
+	/* For GCC, strip out lines beginning with the hash sign */
+	if (ib[0] == '#')
+		goto loop;
 	strcpy(ic, ib);
 	scanline();
 	return(1);

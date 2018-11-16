@@ -1025,7 +1025,7 @@ outall()
  *		char *	txtp		pointer to txt array
  *
  *	functions called:
- *		int	fprintf()	c_library
+ *		int	fputc()		c_library
  *		VOID	out()		asout.c
  *
  *	side effects:
@@ -1036,12 +1036,12 @@ VOID
 outdot()
 {
 	if (oflag && pass==2) {
-		fprintf(ofp, "T");
+		fputc('T', ofp);
 		out(txt,(int) (txtp-txt));
-		fprintf(ofp, "\n");
-		fprintf(ofp, "R");
+		fputc('\n', ofp);
+		fputc('R', ofp);
 		out(rel,(int) (relp-rel));
-		fprintf(ofp, "\n");
+		fputc('\n', ofp);
 		txtp = txt;
 		relp = rel;
 	}
@@ -1116,7 +1116,8 @@ int nr;
  *		char *	txtp		pointer to txt array
  *
  *	functions called:
- *		int	fprintf()	c_library
+ *		int	fputc()		c_library
+ *		int	fputs()		c_library
  *		VOID	out()		asout.c
  *
  *	side effects:
@@ -1129,12 +1130,12 @@ outbuf(s)
 char *s;
 {
 	if (txtp > &txt[a_bytes]) {
-		fprintf(ofp, "T");
+		fputc('T', ofp);
 		out(txt,(int) (txtp-txt));
-		fprintf(ofp, "\n");
-		fprintf(ofp, "%s", s);
+		fputc('\n', ofp);
+		fputs(s, ofp);
 		out(rel,(int) (relp-rel));
-		fprintf(ofp, "\n");
+		fputc('\n', ofp);
 	}
 	txtp = txt;
 	relp = rel;
@@ -1180,6 +1181,8 @@ char *s;
  *
  *	functions called:
  *		int	fprintf()	c_library
+ *		int	fputc()		c_library
+ *		int	fputs()		c_library
  *		VOID	outarea()	asout.c
  *		VOID	outbank()	asout.c
  *		VOID	outmode()	asout.c
@@ -1253,9 +1256,10 @@ outgsd()
 	 * Module name
 	 */
 	if (module[0]) {
-		fprintf(ofp, "M ");
+		fputs("M ", ofp);
 		ptr = &module[0];
-		fprintf(ofp, "%s\n", ptr);
+		fputs(ptr, ofp);
+		fputc('\n', ofp);
 	}
 
 	/*
@@ -1330,6 +1334,7 @@ outgsd()
  *
  *	functions called:
  *		int	fprintf()	c_library
+ *		int	fputc()		c_library
  *		void	out()		.REL file data format processor
  *
  *	side effects:
@@ -1358,7 +1363,7 @@ struct mode *mp;
 			fprintf(ofp, "G %03u %03u", index, i*16);
 		}		
 		out(p + i*16, 16);
-		fprintf(ofp, "\n");
+		fputc('\n', ofp);
 	}
 }
 
@@ -1379,6 +1384,8 @@ struct mode *mp;
  *
  *	functions called:
  *		int	fprintf()	c_library
+ *		int	fputc()		c_library
+ *		int	fputs()		c_library
  *
  *	side effects:
  *		The B line is sent to the .REL file.
@@ -1390,8 +1397,8 @@ struct bank *bp;
 {
 	char * frmt;
 
-	fprintf(ofp, "B ");
-	fprintf(ofp, "%s", &bp->b_id[0]);
+	fputs("B ", ofp);
+	fputs(&bp->b_id[0], ofp);
 
 #ifdef	LONGINT
 	switch(xflag) {
@@ -1411,10 +1418,10 @@ struct bank *bp;
 
 	fprintf(ofp, frmt, bp->b_base & a_mask, bp->b_size & a_mask, bp->b_map & a_mask, bp->b_flag);
 	if ((bp->b_fsfx != NULL) && *bp->b_fsfx) {
-		fprintf(ofp, " fsfx %s\n", bp->b_fsfx);
-	} else {
-		fprintf(ofp, "\n");
+		fputs(" fsfx ", ofp);
+		fputs(bp->b_fsfx, ofp);
 	}
+	fputc('\n', ofp);
 }
 
 /*)Function	VOID	outarea(ap)
@@ -1436,6 +1443,8 @@ struct bank *bp;
  *
  *	functions called:
  *		int	fprintf()	c_library
+ *		int	fputc()		c_library
+ *		int	fputs()		c_library
  *
  *	side effects:
  *		The A line is sent to the .REL file.
@@ -1461,8 +1470,8 @@ struct area *ap;
 	default:	a_flag |= (A_REL | A_CON);	break;
 	}
 
-	fprintf(ofp, "A ");
-	fprintf(ofp, "%s", &ap->a_id[0]);
+	fputs("A ", ofp);
+	fputs(&ap->a_id[0], ofp);
 
 #ifdef	LONGINT
 	switch(xflag) {
@@ -1493,7 +1502,7 @@ struct area *ap;
 			fprintf(ofp, " bank %u", bp->b_ref);
 		}
 	}
-	fprintf(ofp, "\n");
+	fputc('\n', ofp);
 }
 
 /*)Function	VOID	outsym(sp)
@@ -1515,6 +1524,7 @@ struct area *ap;
  *
  *	functions called:
  *		int	fprintf()	c_library
+ *		int	fputs()		c_library
  *
  *	side effects:
  *		The S line is sent to the .REL file.
@@ -1532,9 +1542,9 @@ struct sym *sp;
 	 */
 	s_addr = sp->s_addr & a_mask;
 
-	fprintf(ofp, "S ");
-	fprintf(ofp, "%s", &sp->s_id[0]);
-	fprintf(ofp, " %s", sp->s_type==S_NEW ? "Ref" : "Def");
+	fputs("S ", ofp);
+	fputs(&sp->s_id[0], ofp);
+	fputs(sp->s_type==S_NEW ? " Ref" : " Def", ofp);
 
 #ifdef	LONGINT
 	switch(xflag) {

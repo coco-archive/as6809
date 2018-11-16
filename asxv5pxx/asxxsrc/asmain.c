@@ -112,7 +112,7 @@
  *					address of symbols caused by
  *					variable length instruction formats
  *		int	gflag		-g, make undefined symbols global flag
- *		int	tflag		-h, hidden option for diagnostic info dump
+ *		int	tflag		-t, hidden option for diagnostic info dump
  *		char	ib[]		assembler-source text line
  *		int	ifcnd[]		array of IF statement condition
  *					values (0 = FALSE) indexed by tlevel
@@ -198,7 +198,6 @@ char *argv[];
 		exit(ER_FATAL);
 	}
 
-	fprintf(stdout, "\n");
 	q = NULL;
 	asmc = NULL;
 	asmp = NULL;
@@ -2562,11 +2561,11 @@ VOID
 usage(n)
 int n;
 {
-	char   **dp;
+	char **dp;
 
-	fprintf(stderr, "\nASxxxx Assembler %s  (%s)", VERSION, cpu);
-	fprintf(stderr, "\nCopyright (C) %s  Alan R. Baldwin", COPYRIGHT);
-	fprintf(stderr, "\nThis program comes with ABSOLUTELY NO WARRANTY.\n\n");
+	fprintf(stderr, "ASxxxx Assembler " VERSION " (%s)\n", cpu);
+	fprintf(stderr, "Copyright (C) " COPYRIGHT " Alan R. Baldwin\n");
+	fprintf(stderr, "This program comes with ABSOLUTELY NO WARRANTY.\n\n");
 	for (dp = usetxt; *dp; dp++)
 		fprintf(stderr, "%s\n", *dp);
 	asexit(n);
