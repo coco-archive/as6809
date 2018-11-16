@@ -1,7 +1,7 @@
 /* aslex.c */
 
 /*
- *  Copyright (C) 1989-2009  Alan R. Baldwin
+ *  Copyright (C) 1989-2014  Alan R. Baldwin
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -37,12 +37,12 @@
  *		int	get()
  *		int	getdlm()
  *		VOID	getid()
- *		int	getline()
  *		int	getmap()
  *		int	getnb()
  *		int	getlnm()
  *		VOID	getst()
  *		int	more()
+ *		int	nxtline()
  *		int	replace()
  *		VOID	scanline()
  *		VOID	unget()
@@ -510,21 +510,22 @@ int flag;
 	return(1);
 }
 
-/*)Function	int	getline()
+/*)Function	int	nxtline()
  *
- *	The function getline() reads a line of assembler-source text
+ *	The function nxtline() reads a line of assembler-source text
  *	from an assembly source text file, include file, or macro.
  *	Lines of text are processed from assembler-source files until
  *	all files have been read.  If an include file is opened then
  *	lines of text are read from the include file (or nested
  *	include file) until the end of the include file is found.
  *	The input text line is transferred into the global string
- *	ib[] and converted to a NULL terminated string.  The string
+ *	ib[], converted to a NULL terminated string, and is used for
+ *	for internal processing by the assembler.  The string
  *	is then copied into the global string ic[] which is used
- *	for internal processing by the assembler.  The function
- *	scanline() is called to process any .define substitutions
+ *	during the listing process.  The function scanline()
+ *	is called to process any .define substitutions
  *	in the assembler-source text line.  The function
- *	getline() returns a (1) after succesfully reading
+ *	nxtline() returns a (1) after succesfully reading
  *	a line,	or a (0) if all files have been read.
  *
  *	local variables:
@@ -638,7 +639,7 @@ int flag;
  */
 
 int
-getline()
+nxtline()
 {
 	struct asmf *asmt;
 
@@ -758,7 +759,7 @@ loop:	if (asmc == NULL) return(0);
 		break;
 
 	default:
-		fprintf(stderr, "?ASxxxx-Internal-getline(objtyp)-Error.\n\n");
+		fprintf(stderr, "?ASxxxx-Internal-nxtline(objtyp)-Error.\n\n");
 		asexit(ER_FATAL);
 		break;
 	}

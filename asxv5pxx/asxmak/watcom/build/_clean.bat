@@ -3,5 +3,6 @@ del *.exe
 del *.obj
 del *.map
 del *.sym
-del /q ..\exe\*.*
+del ..\misc\*.lst
+del /q ..\exe\*.exe
 

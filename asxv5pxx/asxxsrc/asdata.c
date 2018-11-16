@@ -1,7 +1,7 @@
 /* asdata.c */
 
 /*
- *  Copyright (C) 1989-2009  Alan R. Baldwin
+ *  Copyright (C) 1989-2014  Alan R. Baldwin
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -217,6 +217,8 @@ int	page;		/*	current page number
 			 */
 int	lop;		/*	current line number on page
 			 */
+time_t	curtim;		/*	pointer to the current time string
+			 */
 int	pass;		/*	assembler pass number
 			 */
 int	aflag;		/*	-a, make all symbols global flag
@@ -229,7 +231,7 @@ int	fflag;		/*	-f(f), relocations flagged flag
 			 */
 int	gflag;		/*	-g, make undefined symbols global flag
 			 */
-int	hflag;		/*	-h, diagnostic help printout flag
+			/*	-h, diagnostic help printout flag
 			 */
 int	jflag;		/*	-j, enable NoICE Debug Symbols
 			 */
@@ -239,9 +241,15 @@ int	oflag;		/*	-o, generate relocatable output flag
 			 */
 int	pflag;		/*	-p, disable listing pagination
 			 */
+int	rflag;		/*	-r, line numbers output to .lst to .rst hint file
+			 */
 int	sflag;		/*	-s, generate symbol table flag
 			 */
+int	tflag;		/*	-t, output diagnostic parameters from assembler
+			 */
 int	uflag;		/*	-u, disable .list/.nlist processing flag
+			 */
+int	vflag;		/*	-v, enable out of range signed / unsigned errors
 			 */
 int	wflag;		/*	-w, enable wide listing format
 			 */
@@ -259,6 +267,8 @@ a_uint	s_mask;		/*	Sign Mask
 			 */
 a_uint	v_mask;		/*	Value Mask
 			 */
+a_uint	p_mask;		/*	Page Mask
+			 */
 int	as_msb;		/*	current MSB byte select
 			 *	0 == low byte
 			 *	1 == high byte
@@ -273,6 +283,9 @@ a_uint	fuzz;		/*	tracks pass to pass changes in the
 			 *	variable length instruction formats
 			 */
 int	lmode;		/*	listing mode
+			 */
+char *	eqt_area;	/*	pointer to the area name
+			 *	associated with lmode = ELIST
 			 */
 char	*ep;		/*	pointer into error list
 			 *	array eb[NERR]
@@ -465,6 +478,8 @@ struct	bank	*bankp = &bank[1];
 struct	def	*defp = NULL;
 
 
+FILE	*hfp;		/*	.lst to .rst hint file handle
+			 */
 FILE	*lfp;		/*	list output file handle
 			 */
 FILE	*ofp;		/*	relocation output file handle

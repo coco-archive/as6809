@@ -1,7 +1,7 @@
 /* i48pst.c */
 
 /*
- *  Copyright (C) 2009  Alan R. Baldwin
+ *  Copyright (C) 2009-2014  Alan R. Baldwin
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -287,7 +287,7 @@ struct	mne	mne[] = {
     {	NULL,	"call",		S_JMP11,	0,	0x14	},
     {	NULL,	"jmp",		S_JMP11,	0,	0x04	},
 
-    {	NULL,	"jmpp",		S_JMPP,		0,	0x83	},
+    {	NULL,	"jmpp",		S_JMPP,		0,	0xB3	},
 
     {	NULL,	"jb0",		S_BITBR,	0,	0x12	},
     {	NULL,	"jb1",		S_BITBR,	0,	0x32	},

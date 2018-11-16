@@ -109,7 +109,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			IntermediateDirectory="$(temp)\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -148,6 +148,7 @@
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
+				CompileAs="1"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"

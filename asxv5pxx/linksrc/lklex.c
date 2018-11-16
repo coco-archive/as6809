@@ -1,7 +1,7 @@
 /* lklex.c */
 
 /*
- *  Copyright (C) 1989-2009  Alan R. Baldwin
+ *  Copyright (C) 1989-2014  Alan R. Baldwin
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,10 +35,10 @@
  *		int	get()
  *		VOID	getfid()
  *		VOID	getid()
- *		int	getline()
  *		int	getmap()
  *		int	getnb()
  *		int	more()
+ *		int	nxtline()
  *		VOID	skip()
  *		VOID	unget()
  *
@@ -66,13 +66,13 @@
  *
  *	local variables:
  *		char *	p		pointer to external string buffer
- *		int	c		current character value
  *
  *	global variables:
  *		char	ctype[]		a character array which defines the
  *					type of character being processed.
  *					This index is the character
  *					being processed.
+ *		char	id[]		string buffer
  *
  *	called functions:
  *		int	get()		lklex.c
@@ -118,7 +118,6 @@ char *id;
  *
  *	local variables:
  *		char *	p		pointer to external string buffer
- *		int	c		current character value
  *
  *	called functions:
  *		int	get()		lklex.c
@@ -361,15 +360,15 @@ int d;
 	return (c);
 }
 
-/*)Function	int	getline()
+/*)Function	int	nxtline()
  *
- *	The function getline() reads a line of input text from a
+ *	The function nxtline() reads a line of input text from a
  *	.rel source text file, a .lnk command file or from stdin.
  *	Lines of text are processed from a single .lnk file or
  *	multiple .rel files until all files have been read.
  *	The input text line is copied into the global string ib[]
  *	and converted to a NULL terminated string.  The function
- *	getline() returns a (1) after succesfully reading a line
+ *	nxtline() returns a (1) after succesfully reading a line
  *	or a (0) if all files have been read.
  *	This function also opens each input .lst file and output
  *	.rst file as each .rel file is processed.
@@ -377,9 +376,11 @@ int d;
  *	local variables:
  *		int	ftype		file type
  *		char *	fid		file name
- *		char *	p		temporary string pointer
  *
  *	global variables:
+ *		FILE	*hfp		The file handle to the current
+ *					.lst to .rst hint file associated
+ *					with the LST file being scanned.
  *		lfile	*cfp		The pointer *cfp points to the
  *				 	current lfile structure
  *		lfile	*filep	 	The pointer *filep points to the
@@ -387,13 +388,15 @@ int d;
  *				 	lfile structures.
  *		int	gline		get a line from the LST file
  *					to translate for the RST file
+ *		int	hline		get a line from the HLR file
+ *					as a hint to update the RST file
  *		char	ib[NINPUT]	REL file text line
+ *		int	obj_flag	Linked file/library object flag
  *		int	pass		linker pass number
- *		int	pflag		print linker command file flag
  *		FILE	*rfp		The file handle to the current
  *					output RST file
- *		FILE	*sfp		The file handle sfp points to the
- *				 	currently open file
+ *		FILE	*sfp		The file handle to the current
+ *				 	input file
  *		FILE *	stdin		c_library
  *		FILE *	stdout		c_library
  *		FILE	*tfp		The file handle to the current
@@ -406,8 +409,10 @@ int d;
  *		int	fclose()	c_library
  *		char *	fgets()		c_library
  *		int	fprintf()	c_library
+ *		VOID	gethlr()	lklist.c
  *		VOID	lkulist()	lklist.c
  *		VOID	lkexit()	lkmain.c
+ *		VOID	SDCDBcopy()	lksdcdb.c
  *
  *	side effects:
  *		The input stream is scanned.  The .rel files will be
@@ -415,7 +420,7 @@ int d;
  */
 
 int
-getline()
+nxtline()
 {
 	int ftype;
 	char *fid;
@@ -455,6 +460,8 @@ loop:	if (cfp && cfp->f_type == F_STD)
 				      if ((rfp = afile(fid, "rst", 1)) == NULL) {
 					fclose(tfp);
 					tfp = NULL;
+				      } else {
+				        hfp = afile(fid, "hlr", 4);
 				      }
 				    }
 				  }
@@ -467,6 +474,7 @@ loop:	if (cfp && cfp->f_type == F_STD)
 #endif
 
 				gline = 1;
+				hline = 1;
 			} else {
 				fprintf(stderr, "Invalid file type\n");
 				lkexit(ER_FATAL);

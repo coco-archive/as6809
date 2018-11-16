@@ -1,7 +1,7 @@
 /* lkrloc4.c */
 
 /*
- *  Copyright (C) 2003-2009  Alan R. Baldwin
+ *  Copyright (C) 2003-2014  Alan R. Baldwin
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -542,7 +542,7 @@ relr4()
 			case R4_PCR0:
 			case R4_PCR:
 				if (((relv & m) != m) && ((relv & m) != 0)) {
-					error = 2 + argm;
+					error = 3 + argm;
 				}
 				break;
 			case R4_PAG0:
@@ -693,7 +693,7 @@ relr4()
 			case R4_PCR0:
 			case R4_PCR:
 				if (((relv & m) != m) && ((relv & m) != 0)) {
-					error = 2 + argm;
+					error = 3 + argm;
 				}
 				break;
 			case R4_PAG0:
@@ -741,7 +741,7 @@ relr4()
 			rerr.rval = relv - reli;
 			relerr4(errmsg4[error]);
 
-			for (i=rtp; i<rtp+a_bytes-1; i++) {
+			for (i=rtp; i<rtp+a_bytes; i++) {
 				if (rtflg[i]) {
 					rterr[i] = error;
 					break;
@@ -908,7 +908,10 @@ relp4()
 	sdp.s_areax = a[aindex];
 	sdp.s_area = sdp.s_areax->a_bap;
 	sdp.s_addr = adb_xb(0,a_bytes*2);
-	if (sdp.s_area->a_addr & 0xFF || sdp.s_addr & 0xFF)
+	if (rtcnt > a_bytes*3) {
+		p_mask = adb_xb(0,a_bytes*3);
+	}
+	if (sdp.s_area->a_addr & p_mask || sdp.s_addr & p_mask)
 		relerp4("Page Definition Boundary Error");
 }
 

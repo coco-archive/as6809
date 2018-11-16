@@ -1,7 +1,7 @@
 /* lksym.c */
 
 /*
- *  Copyright (C) 1989-2009  Alan R. Baldwin
+ *  Copyright (C) 1989-2014  Alan R. Baldwin
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -172,15 +172,14 @@ newsym()
 					"Multiple definition of %s\n", id);
 				lkerr++;
 			}
-		} else {
-			/*
-			 * Set value and area extension link.
-			 */
-			tsp->s_addr = ev;
-			tsp->s_axp = axp;
-			tsp->s_type |= S_DEF;
-			tsp->m_id = hp->m_id;
 		}
+		/*
+		 * Set value and area extension link.
+		 */
+		tsp->s_addr = ev;
+		tsp->s_axp = axp;
+		tsp->s_type |= S_DEF;
+		tsp->m_id = hp->m_id;
 	} else {
 		fprintf(stderr, "Invalid symbol type %c for %s\n", c, id);
 		lkexit(ER_FATAL);

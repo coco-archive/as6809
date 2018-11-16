@@ -11,6 +11,8 @@ REM    symantec
 REM    turboc
 REM    vc6
 REM    vs05
+REM    vs10
+REM    vs13
 REM    watcom
 REM
 
@@ -26,7 +28,7 @@ if %1.==djgpp. goto DJGPP
 REM Linux
 if %1.==LINUX. goto CYGWIN
 if %1.==linux. goto LINUX
-REM Cygwin
+REM Symantec
 if %1.==SYMANTEC. goto SYMANTEC
 if %1.==symantec. goto SYMANTEC
 REM Turboc
@@ -38,6 +40,12 @@ if %1.==vc6. goto VC6
 REM VS05
 if %1.==VS05. goto VS05
 if %1.==vs05. goto VS05
+REM VS10
+if %1.==VS10. goto VS10
+if %1.==vs10. goto VS10
+REM VS13
+if %1.==VS13. goto VS13
+if %1.==vs13. goto VS13
 REM Watcom
 if %1.==WATCOM. goto WATCOM
 if %1.==watcom. goto WATCOM
@@ -72,6 +80,14 @@ goto EXIT
 path=r:\asxv5pxx\asxmak\vs05\exe
 goto EXIT
 
+:VS10
+path=r:\asxv5pxx\asxmak\vs10\exe
+goto EXIT
+
+:VS13
+path=r:\asxv5pxx\asxmak\vs13\exe
+goto EXIT
+
 :WATCOM
 path=r:\asxv5pxx\asxmak\watcom\exe
 goto EXIT
@@ -89,6 +105,8 @@ echo symantec  SYMANTEC
 echo turboc    TURBOC
 echo vc6       VC6
 echo vs05      VS05
+echo vs10      VS10
+echo vs13      VS13
 echo watcom    WATCOM
 echo --------  --------
 echo.

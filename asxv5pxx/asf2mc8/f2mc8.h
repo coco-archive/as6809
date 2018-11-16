@@ -1,7 +1,7 @@
 /* f2mc8.h */
 
 /*
- *  Copyright (C) 2005-2009  Alan R. Baldwin
+ *  Copyright (C) 2005-2014  Alan R. Baldwin
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,10 +29,11 @@
 		F2MC8.H
 	}
 	$(FILES) = {
-		F8MCH.C
-		F8ADR.C
-		F8PST.C
+		F2MC8MCH.C
+		F2MC8ADR.C
+		F2MC8PST.C
 		ASMAIN.C
+		ASMCRO.C
 		ASDBG.C
 		ASLEX.C
 		ASSYM.C
