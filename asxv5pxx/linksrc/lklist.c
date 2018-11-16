@@ -59,7 +59,7 @@
  *	local variables:
  *		char *	frmt		string format
  *		char	np[]		new page string
- *		char	tp[]		temporary string	
+ *		char	tp[]		temporary string
  *
  *	global variables:
  *		time_t	curtim		current time string pointer
@@ -85,7 +85,7 @@ FILE *fp;
 	 *12345678901234567890123456789012345678901234567890123456789012345678901234567890
 	 *ASxxxx Linker Vxx.xx                                                    Page 1
 	 */
- 	/*
+	/*
 	 * Total newpag() string length is 78 characters.
 	 */
 	sprintf(np, "ASxxxx Linker %-64s", VERSION);
@@ -97,7 +97,11 @@ FILE *fp;
 	/*
 	 * Output string.
 	 */
+#if NOFORMFEED
+	fprintf(fp, "%s\n", np);
+#else
 	fprintf(fp, "\f%s\n", np);
+#endif
 	/*
 	 *12345678901234567890123456789012345678901234567890123456789012345678901234567890
 	 *Hexadecimal [16-Bits]                                 Sun Sep 15 17:22:25 2013
@@ -342,10 +346,10 @@ struct bank *yp;
 			}
 			putc('\n', mfp);
 			for(i=0;i<n;++i)
-				fprintf(mfp, "%s", frmta);
+				fputs(frmta, mfp);
 			putc('\n', mfp);
 			for(i=0;i<n;++i)
-				fprintf(mfp, "%s", frmtb);
+				fputs(frmtb, mfp);
 			putc('\n', mfp);
 		}
 
@@ -506,7 +510,7 @@ struct bank *yp;
 			case 3:
 			case 4: frmt = "   "; break;
 			}
-			fprintf(mfp, "%s", frmt);
+			fputs(frmt, mfp);
 		} else
 		if ((i % n) == 0) {
 			slew(xp, yp);
@@ -516,7 +520,7 @@ struct bank *yp;
 			case 3:
 			case 4: frmt = "  "; break;
 			}
-			fprintf(mfp, "%s", frmt);
+			fputs(frmt, mfp);
 		}
 
 		sp = p[i];
@@ -1237,8 +1241,8 @@ loop:	if (gline) {
 	/*
 	 * Fix 'u' if [nn], cycles, is specified
 	 */
-	 if (rb[a + (s*u) - 1] == CYCNT_END) {
-	 	u -= 1;
+	if (rb[a + (s*u) - 1] == CYCNT_END) {
+		u -= 1;
 	}
 	/*
 	 * Output text line when updates finished
@@ -1734,7 +1738,7 @@ int err;
 	int a, n, m, r, s, u;
 	int i, j;
 
- 	/*
+	/*
 	 * Exit if listing file is not open
 	 */
 	if (tfp == NULL)
@@ -1861,8 +1865,8 @@ loop:	if (hline) {
 	/*
 	 * Fix 'u' if [nn], cycles, is specified
 	 */
-	 if (rb[a + (s*u) - 1] == CYCNT_END) {
-	 	u -= 1;
+	if (rb[a + (s*u) - 1] == CYCNT_END) {
+		u -= 1;
 	}
 	/*
 	 * Must have an address

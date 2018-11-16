@@ -757,7 +757,7 @@ struct expr *esp;
  *		arithmetic overflow cannot be determined.
  *		This ambiguity is caused by the inability
  *		to distinguish signed and unsigned values
- *		at the instrinsic sizeof(int) size. 
+ *		at the instrinsic sizeof(int) size.
  */
 
 a_uint

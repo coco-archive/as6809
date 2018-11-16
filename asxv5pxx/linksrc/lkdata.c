@@ -80,6 +80,10 @@ int	mflag;		/*	Map output flag
 			 */
 int	xflag;		/*	Map file radix type flag
 			 */
+int	aflag;		/*	add only the first library found
+			 */
+int	rflag;		/*	disallow multiple defined symbol
+			 */
 int	pflag;		/*	print linker command file flag
 			 */
 int	uflag;		/*	Listing relocation flag
@@ -305,7 +309,7 @@ struct	head	*hp;	/*	Pointer to the current
  *	};
  */
 struct	bank	bank[1] = {
-    {	NULL,	"",	"",	0,	0,	0,	0,	"",	NULL,	0,	1	}
+    {	NULL,	"",	"",	0,	0,	0,	0,	"",	NULL,	0,	1,	0	}
 };
 
 struct	bank	*bankp = &bank[0];
@@ -494,6 +498,9 @@ struct	rerr	rerr;	/*	Structure containing the
 struct	lbpath	*lbphead;	/*	pointer to the first
 				 *	library path structure
 				 */
+struct	lbpath	*lbptail;	/*	pointer to the last
+				 *	library path structure
+				 */
 
 /*
  *	The structure lbname is created for all combinations of the
@@ -524,6 +531,9 @@ struct	lbpath	*lbphead;	/*	pointer to the first
  *	};
  */
 struct	lbname	*lbnhead;	/*	pointer to the first
+				 *	library name structure
+				 */
+struct	lbname	*lbntail;	/*	pointer to the last
 				 *	library name structure
 				 */
 
@@ -566,6 +576,9 @@ struct	lbname	*lbnhead;	/*	pointer to the first
  *	};
  */
 struct	lbfile	*lbfhead;	/*	pointer to the first
+				 *	library file structure
+				 */
+struct	lbfile	*lbftail;	/*	pointer to the last
 				 *	library file structure
 				 */
 

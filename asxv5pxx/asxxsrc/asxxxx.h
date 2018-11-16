@@ -39,7 +39,6 @@
 /*
  * System Include Files
  */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <setjmp.h>
@@ -47,22 +46,9 @@
 #include <time.h>
 
 /*
- * Local Definitions
+ * Include Config File
  */
-
-#define	VERSION	"V05.11"
-#define	COPYRIGHT "2015"
-
-/*
- * To include NoICE Debugging set non-zero
- */
-#define	NOICE	1
-
-/*
- * To include SDCC Debugging set non-zero
- */
-#define	SDCDB	1
-
+#include "../config.h"
 
 /*
  * The assembler requires certain variables to have
@@ -151,12 +137,10 @@
 #define	LFTERM	'('		/* Left expression delimeter */
 #define	RTTERM	')'		/* Right expression delimeter */
 
-#define NCPS	256		/* Characters per symbol */
 #define	HUGE	1000		/* A huge number */
-#define NERR	2		/* Errors per line */
-#define NINPUT	380		/* Input buffer size */
-#define NCODE	380		/* Listing code buffer size */
-#define NTITL	80		/* Title buffer size */
+#define	NERR	2		/* Errors per line */
+#define	NCODE	(NINPUT)	/* Listing code buffer size */
+#define	NTITL	80		/* Title buffer size */
 #define	NSBTL	80		/* SubTitle buffer size */
 #define	NHASH	(1 << 6)	/* Buckets in hash table */
 #define	HMASK	(NHASH - 1)	/* Hash mask */
@@ -165,13 +149,12 @@
 #define	MAXINC	6		/* Maximum nesting of include files */
 #define	MAXMCR	20		/* Maximum nesting of macro expansions */
 #define	MAXIF	10		/* Maximum nesting of if/else/endif */
-#define	FILSPC	80		/* Chars. in filespec */
 
-#define NLIST	0		/* No listing */
-#define SLIST	1		/* Source only */
-#define ALIST	2		/* Address only */
+#define	NLIST	0		/* No listing */
+#define	SLIST	1		/* Source only */
+#define	ALIST	2		/* Address only */
 #define	BLIST	3		/* Address only with allocation */
-#define CLIST	4		/* Code */
+#define	CLIST	4		/* Code */
 #define	ELIST	5		/* Equate or IF conditional evaluation */
 
 #define	HLR_NLST	0x0080	/* For HLR file only */
@@ -220,7 +203,7 @@
 /*
  * Default Page Length Mask
  */
-#define	DEFAULT_PMASK	0xFF	/* 256 Element Boundary / Length */ 
+#define	DEFAULT_PMASK	0xFF	/* 256 Element Boundary / Length */
 
 /*
  * NTXT must be defined to have the same value in

@@ -29,28 +29,15 @@
 /*
  * System Include Files
  */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 
 /*
- * Local Definitions
+ * Include Config File
  */
-
-#define	VERSION "V05.11"
-#define	COPYRIGHT "2015"
-
-/*
- * To include NoICE Debugging set non-zero
- */
-#define	NOICE	1
-
-/*
- * To include SDCC Debugging set non-zero
- */
-#define	SDCDB	1
+#include "../config.h"
 
 /*
  * The assembler requires certain variables to have
@@ -150,11 +137,11 @@
 /*
  *	.HLR Definitions from the Assemblers
  */
-#define NLIST	0		/* No listing */
-#define SLIST	1		/* Source only */
-#define ALIST	2		/* Address only */
+#define	NLIST	0		/* No listing */
+#define	SLIST	1		/* Source only */
+#define	ALIST	2		/* Address only */
 #define	BLIST	3		/* Address only with allocation */
-#define CLIST	4		/* Code */
+#define	CLIST	4		/* Code */
 #define	ELIST	5		/* Equate only */
 
 #define	LIST_ERR	0x0001	/* Error Code(s) */
@@ -195,17 +182,13 @@
  * This file defines the format of the
  * relocatable binary file.
  */
-
-#define NCPS		80	/* characters per symbol */
-#define	NINPUT		512	/* Input buffer size */
-#define	NHASH	     (1 << 6)	/* Buckets in hash table */
+#define	NHASH	     (1 << 8)	/* Buckets in hash table */
 #define	HMASK	    (NHASH - 1)	/* Hash mask */
 #define	NLPP		60	/* Lines per page */
 #define	NMAX		78	/* IXX/SXX/DBX Buffer Length */
-#define		IXXMAXBYTES	32	/* NMAX > (2 * IXXMAXBYTES) */
-#define		SXXMAXBYTES	32	/* NMAX > (2 * SXXMAXBYTES) */
-#define		DBXMAXBYTES	64	/* NMAX > (  DBXMAXBYTES  ) */
-#define	FILSPC		80	/* File spec length */
+#define	IXXMAXBYTES	32	/* NMAX > (2 * IXXMAXBYTES) */
+#define	SXXMAXBYTES	32	/* NMAX > (2 * SXXMAXBYTES) */
+#define	DBXMAXBYTES	64	/* NMAX > (  DBXMAXBYTES  ) */
 
 /*
  * NTXT must be defined to have the same value in
@@ -226,7 +209,7 @@
 /*
  * Default Page Length Mask
  */
-#define	DEFAULT_PMASK	0xFF	/* 256 Element Boundary / Length */ 
+#define	DEFAULT_PMASK	0xFF	/* 256 Element Boundary / Length */
 
 /*
  * Internal ASxxxx Version Variable
@@ -771,6 +754,10 @@ struct lbname {
 	char		*path;
 	char		*libfil;
 	char		*libspc;
+	FILE		*libfp;
+	long		begin;
+	long		*hashbin;
+	int		nhashbin;
 	int		f_obj;
 };
 
@@ -808,6 +795,8 @@ struct lbfile {
 	struct	lbfile	*next;
 	char		*libspc;
 	char		*relfil;
+	FILE		*libfp;
+	long		offset;
 	char		*filspc;
 	int		f_obj;
 };
@@ -980,6 +969,10 @@ extern	int	yflag;		/*	-y, enable SDCC Debug output
 				 */
 #endif
 
+extern	int	aflag;		/*	add only the first library found
+				 */
+extern	int	rflag;		/*	disallow multiple defined symbol
+				 */
 extern	int	pflag;		/*	print linker command file flag
 				 */
 extern	int	uflag;		/*	Listing relocation flag
@@ -1060,10 +1053,19 @@ extern	char	eqt_id[128];	/*	Area name for this ELIST line
 extern	struct lbpath *lbphead;	/*	pointer to the first
 				 *	library path structure
 				 */
+extern	struct lbpath *lbptail;	/*	pointer to the last
+				 *	library path structure
+				 */
 extern	struct lbname *lbnhead;	/*	pointer to the first
 				 *	library name structure
 				 */
+extern	struct lbname *lbntail;	/*	pointer to the last
+				 *	library name structure
+				 */
 extern	struct lbfile *lbfhead;	/*	pointer to the first
+				 *	library file structure
+				 */
+extern	struct lbfile *lbftail;	/*	pointer to the last
 				 *	library file structure
 				 */
 
@@ -1099,7 +1101,7 @@ extern	int		fndidx(char *str);
 extern	int		fndext(char *str);
 extern	VOID		gblsav(void);
 extern	int		intsiz(void);
-extern	VOID		link(void);
+extern	VOID		lklink(void);
 extern	VOID		lkexit(int i);
 extern	int		main(int argc, char *argv[]);
 extern	VOID		map(void);
@@ -1108,6 +1110,9 @@ extern	VOID		doparse(void);
 extern	VOID		setarea(void);
 extern	VOID		setgbl(void);
 extern	VOID		usage(int n);
+extern	VOID		lkerror(const char *format, ...);
+extern	VOID		lkwarning(const char *format, ...);
+extern	VOID		lkinfo(const char *format, ...);
 
 /* lklex.c */
 extern	VOID		chopcrlf(char *str);
@@ -1188,9 +1193,9 @@ extern	VOID		DefineEndFunction(a_uint value, struct bank *yp);
 extern	VOID		DefineLine(char *lineString, a_uint value, struct bank *yp);
 extern	VOID		PagedAddress(a_uint value, struct bank *yp);
 
-/* lksccdb.c */
+/* lksdcdb.c */
 extern	VOID		SDCDBfopen(void);
-extern	VOID		SDCDBcopy(char * str);
+extern	VOID		SDCDBcopy(char * str, struct lbfile *lbfh);
 extern	VOID		DefineSDCDB(char *name, a_uint value);
 
 /* lkrloc.c */
@@ -1243,12 +1248,12 @@ extern	VOID		relerr4(char *str);
 extern	VOID		relerp4(char *str);
 
 /* lklibr.c */
-extern	VOID		addfile(char *path, char *libfil);
+extern	int		addfile(char *path, char *libfil);
 extern	VOID		addlib(void);
 extern	VOID		addpath(void);
 extern	int		fndsym(char *name);
 extern	VOID		library(void);
-extern	VOID		loadfile(char *filspc);
+extern	VOID		loadfile(struct lbfile *lbfh);
 extern	VOID		search(void);
 
 /* lkout.c */
@@ -1274,7 +1279,7 @@ extern	int		fndext();
 extern	int		fndidx();
 extern	VOID		gblsav();
 extern	int		intsiz();
-extern	VOID		link();
+extern	VOID		lklink();
 extern	VOID		lkexit();
 extern	int		main();
 extern	VOID		map();

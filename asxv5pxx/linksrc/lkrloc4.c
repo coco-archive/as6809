@@ -112,8 +112,7 @@ int c;
 		break;
 
 	default:
-		fprintf(stderr, "Undefined Relocation Operation\n");
-		lkerr++;
+		lkwarning("Undefined relocation operation\n");
 		break;
 
 	}
@@ -307,8 +306,7 @@ relr4()
 	 * Verify Area Mode
 	 */
 	if (eval() != R4_AREA || eval()) {
-		fprintf(stderr, "R input error\n");
-		lkerr++;
+		lkwarning("R input error\n");
 		return;
 	}
 
@@ -317,8 +315,7 @@ relr4()
 	 */
 	aindex = (int) evword();
 	if (aindex >= hp->h_narea) {
-		fprintf(stderr, "R area error\n");
-		lkerr++;
+		lkwarning("R area error\n");
 		return;
 	}
 
@@ -392,15 +389,13 @@ relr4()
 		 */
 		if (mode & R4_SYM) {
 			if (rindex >= hp->h_nsym) {
-				fprintf(stderr, "R symbol error\n");
-				lkerr++;
+				lkwarning("R symbol error\n");
 				return;
 			}
 			reli = symval(s[rindex]);
 		} else {
 			if (rindex >= hp->h_narea) {
-				fprintf(stderr, "R area error\n");
-				lkerr++;
+				lkwarning("R area error\n");
 				return;
 			}
 			reli = a[rindex]->a_addr;
@@ -853,8 +848,7 @@ relp4()
 	 * Verify Area Mode
 	 */
 	if ((eval() != R4_AREA) || eval()) {
-		fprintf(stderr, "P input error\n");
-		lkerr++;
+		lkwarning("P input error\n");
 	}
 
 	/*
@@ -862,8 +856,7 @@ relp4()
 	 */
 	aindex = (int) evword();
 	if (aindex >= hp->h_narea) {
-		fprintf(stderr, "P area error\n");
-		lkerr++;
+		lkwarning("P area error\n");
 		return;
 	}
 
@@ -880,15 +873,13 @@ relp4()
 		 */
 		if (mode & R4_SYM) {
 			if (rindex >= hp->h_nsym) {
-				fprintf(stderr, "P symbol error\n");
-				lkerr++;
+				lkwarning("P symbol error\n");
 				return;
 			}
 			relv = symval(s[rindex]);
 		} else {
 			if (rindex >= hp->h_narea) {
-				fprintf(stderr, "P area error\n");
-				lkerr++;
+				lkwarning("P area error\n");
 				return;
 			}
 			relv = a[rindex]->a_addr;
@@ -901,8 +892,7 @@ relp4()
 	 */
 	aindex = (int) adb_xb(0,a_bytes);
 	if (aindex >= hp->h_narea) {
-		fprintf(stderr, "P area error\n");
-		lkerr++;
+		lkwarning("P area error\n");
 		return;
 	}
 	sdp.s_areax = a[aindex];
@@ -912,7 +902,7 @@ relp4()
 		p_mask = adb_xb(0,a_bytes*3);
 	}
 	if (sdp.s_area->a_addr & p_mask || sdp.s_addr & p_mask)
-		relerp4("Page Definition Boundary Error");
+		relerp4("Page definition boundary error");
 }
 
 /*)Function	VOID	rele4()
@@ -1030,14 +1020,17 @@ char *str;
 	/*
 	 * Print Error
 	 */
-	fprintf(fptr, "\n?ASlink-Warning-%s", str);
-	lkerr++;
+	if (fptr == stderr) {
+		lkwarning(str);
+	} else {
+		fprintf(fptr, "\n%s", str);
+	}
 
 	/*
 	 * Print symbol if symbol based
 	 */
 	if (mode & R4_SYM) {
-		fprintf(fptr, " for symbol  %s\n",
+		fprintf(fptr, " for symbol %s\n",
 			&s[rindex]->s_id[0]);
 	} else {
 		fprintf(fptr, "\n");
@@ -1071,7 +1064,7 @@ char *str;
 /*        |                 |                 |                 |           */
 	fprintf(fptr,
 "  Defin  %-14.14s    %-14.14s    %-14.14s    ",
-			raxp->a_bhp->h_lfile->f_idp,
+			raxp->a_bhp->h_lfile ? raxp->a_bhp->h_lfile->f_idp : "",
 			&raxp->a_bhp->m_id[0],
 			&raxp->a_bap->a_id[0]);
 	if (mode & R4_SYM) {
@@ -1147,8 +1140,12 @@ char *str;
 	/*
 	 * Print Error
 	 */
-	fprintf(fptr, "\n?ASlink-Warning-%s\n", str);
-	lkerr++;
+	if (fptr == stderr) {
+		lkwarning(str);
+	} else {
+		fprintf(fptr, "\n%s", str);
+	}
+	fprintf(fptr, "\n");
 
 	/*
 	 * Print PgDef Info
@@ -1187,7 +1184,7 @@ char *str;
  *
  *	functions called:
  *		int	fprintf()	c_library
- *		VOID	lkexit()	lkmain.c
+ *		VOID	lkerror()	lkmain.c
  *
  *	side effects:
  *		none
@@ -1203,8 +1200,7 @@ a_uint base;
 	a_uint m;
 
 	if ((mp = hp->m_list[r]) == NULL) {
-		fprintf(stderr, "undefined G mode\n");
-		lkexit(ER_FATAL);
+		lkerror("Undefined G mode");
 	}
 
 	if (mp->m_flag) {

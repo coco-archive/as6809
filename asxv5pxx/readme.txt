@@ -19,7 +19,7 @@ for  the   assemblers  and   linker   is   included   with   the
 distribution.  Additionally, test code  for  each assembler  and
 several microprocessor monitors (ASSIST05  for the  6805, MONDEB
 and  ASSIST09  for the 6809, and  BUFFALO 2.5  for the 6811) are
-included  as  working examples  of use of these assemblers.  
+included  as  working examples  of use of these assemblers.
 
 asxv5p10.zip	ASxxxx and ASlink V5.10 Zipped
 
@@ -80,13 +80,13 @@ The Make or Build Exectutable directories are:
 
 
  Documentation in pdf form is
- 	\asxv5pxx\asxhtml\asmlnk.pdf
+	\asxv5pxx\asxhtml\asmlnk.pdf
 
  Documentation in plain text form is
- 	\asxv5pxx\asxhtml\asmlnk.txt
+	\asxv5pxx\asxhtml\asmlnk.txt
 
  Documentation in HTML form may be found starting with
- 	\asxv5pxx\asxhtml\asxxxx.htm
+	\asxv5pxx\asxhtml\asxxxx.htm
 
 
 /*

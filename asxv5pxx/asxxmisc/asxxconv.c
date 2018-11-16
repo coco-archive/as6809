@@ -115,8 +115,6 @@ char *argv[];
 	inpfil = 0;
 	aserr = 0;
 
-	fprintf(stdout, "\n");
-
 	for (i=1; i<argc; ++i) {
 		p = argv[i];
 		if (*p == '-') {
@@ -156,17 +154,17 @@ char *argv[];
 				}
 		} else {
 			if (++inpfil > 1) {
-				printf("\r\nToo many files.\r\n");
+				fprintf(stderr, "Too many files\n");
 				asexit(ER_FATAL);
 			}
 			nfp = fopen(p, "r");
 			if (nfp == NULL) {
-				printf("\r\nFile %s not found\r\n", p);
+				fprintf(stderr, "File %s not found\n", p);
 				asexit(ER_FATAL);
 			}
 			dfp = fopen("a.out", "w");
 			if (dfp == NULL) {
-				printf("\r\nFile a.out not opened\r\n");
+				fprintf(stderr, "File a.out not opened\n");
 				asexit(ER_FATAL);
 			}
 		}
@@ -502,7 +500,7 @@ char *usetxt[] = {
 	"  d    decimal listing",
 	"  q    octal   listing",
 	"  x    hex     listing (default)",
-        "  2    16-Bit  address (default)",
+	"  2    16-Bit  address (default)",
 	"  3    24-Bit  address",
 	"  4    32-Bit  address",
 	"",
@@ -535,11 +533,11 @@ VOID
 usage(n)
 int n;
 {
-	char   **dp;
+	char **dp;
 
-	fprintf(stderr, "\nASxxxx Assembler Listing Converter %s", VERSION);
-	fprintf(stderr, "\nCopyright (C) 2009  Alan R. Baldwin");
-	fprintf(stderr, "\nThis program comes with ABSOLUTELY NO WARRANTY.\n\n");
+	fprintf(stderr, "ASxxxx Assembler Listing Converter " VERSION "\n");
+	fprintf(stderr, "Copyright (C) " COPYRIGHT " Alan R. Baldwin\n");
+	fprintf(stderr, "This program comes with ABSOLUTELY NO WARRANTY.\n\n");
 	for (dp = usetxt; *dp; dp++)
 		fprintf(stderr, "%s\n", *dp);
 	asexit(n);

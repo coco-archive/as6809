@@ -504,7 +504,7 @@ list()
 				 */
 				nl = (!cflag && !(opcycles & OPCY_NONE) && (listing & LIST_CYC)) ? (n-1) : n;
 				nl = (nb > nl) ? nl : nb;
-	 			list1(wp, wpt, nl);
+				list1(wp, wpt, nl);
 				wp += nl;
 				wpt += nl;
 				op += (nl * b);
@@ -966,7 +966,7 @@ int hlr_nb;
  *	local variables:
  *		char *	frmt		string format
  *		char	np[]		new page string
- *		char	tp[]		temporary string	
+ *		char	tp[]		temporary string
  *
  *	global variables:
  *		char	cpu[]		cpu type string
@@ -998,12 +998,12 @@ int flag;
 		if (flag) {
 			/*
 			 *12345678901234567890123456789012345678901234567890123456789012345678901234567890
-			 *ASxxxx Assembler Vxx.xx  (Motorola 6809)                                Page 1
+			 *ASxxxx Assembler Vxx.xx (Motorola 6809)                                 Page 1
 			 */
-		 	/*
+			/*
 			 * Total string length is 78 characters.
 			 */
-			sprintf(tp, "ASxxxx Assembler %s  (%s)", VERSION, cpu);
+			sprintf(tp, "ASxxxx Assembler %s (%s)", VERSION, cpu);
 			sprintf(np, "%-78s", tp);
 			/*
 			 * Right justify page number in string.
@@ -1013,12 +1013,16 @@ int flag;
 			/*
 			 * Output string.
 			 */
+#if NOFORMFEED
+			fprintf(fp, "%s\n", np);
+#else
 			fprintf(fp, "\f%s\n", np);
+#endif
 			/*
 			 *12345678901234567890123456789012345678901234567890123456789012345678901234567890
 			 *Hexadecimal [16-Bits]                                 Sun Sep 15 17:22:25 2013
 			 */
-		 	/*
+			/*
 			 * Total string length is 78 characters.
 			 */
 			switch(xflag) {
@@ -1231,7 +1235,7 @@ FILE *fp;
 				break;
 
 			}
-			fprintf(fp, "%s", frmt);
+			fputs(frmt, fp);
 		} else {
 			sa = sp->s_addr & a_mask;
 #ifdef	LONGINT

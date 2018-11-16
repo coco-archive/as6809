@@ -1,9 +1,9 @@
 ######################################################################
 #  Makefile
-#		LINUX Version
-#		=============
+#		DARWIN Version
+#		==============
 #
-#   8 October 2014			Created for LINUX     / make /
+#   8 October 2014			Created for DARWIN    / make /
 #
 ######################################################################
 
@@ -242,7 +242,7 @@ SRCLNK:=	$(ASXBAS)linksrc/
 SRCLIB:=	$(ASXBAS)libsrc/
 SRCMISC:=	$(ASXBAS)asxxmisc/
 SRCS19OS9:=	$(ASXBAS)s19os9/
-DSTEXE:=	$(ASXBAS)asxmak/linux/exe/
+DSTEXE:=	$(ASXBAS)asxmak/darwin/exe/
 
 SRC1802=	$(ASXBAS)as1802/
 SRC2650=	$(ASXBAS)as2650/

@@ -291,6 +291,7 @@ struct	mne	mne[] = {
     {	NULL,	"ldd",		S_LR,		0,	0xCC	},
     {	NULL,	"ldx",		S_LR,		0,	0x8E	},
     {	NULL,	"ldu",		S_LR,		0,	0xCE	},
+    {	NULL,	"ldq",		S_LRQ,		0,	0xCD	},
 
     {	NULL,	"leax",		S_LEA,		0,	0x30	},
     {	NULL,	"leay",		S_LEA,		0,	0x31	},
@@ -304,6 +305,15 @@ struct	mne	mne[] = {
 
     {	NULL,	"exg",		S_EXG,		0,	0x1E	},
     {	NULL,	"tfr",		S_EXG,		0,	0x1F	},
+
+    {	NULL,	"addr",		S_IR,		0,	0x30	},
+    {	NULL,	"adcr",		S_IR,		0,	0x31	},
+    {	NULL,	"subr",		S_IR,		0,	0x32	},
+    {	NULL,	"sbcr",		S_IR,		0,	0x33	},
+    {	NULL,	"andr",		S_IR,		0,	0x34	},
+    {	NULL,	"orr",		S_IR,		0,	0x35	},
+    {	NULL,	"eorr",		S_IR,		0,	0x36	},
+    {	NULL,	"cmpr",		S_IR,		0,	0x37	},
 
     {	NULL,	"cwai",		S_CC,		0,	0x3C	},
     {	NULL,	"orcc",		S_CC,		0,	0x1A	},
@@ -377,14 +387,18 @@ struct	mne	mne[] = {
     {	NULL,	"lbsr",		S_LBSR,		0,	0x17	},
 
     {	NULL,	"neg",		S_SOP,		0,	0x40	},
+    {	NULL,	"oim",		S_SOP,		0,	0x41	},
+    {	NULL,	"aim",		S_SOP,		0,	0x42	},
     {	NULL,	"com",		S_SOP,		0,	0x43	},
     {	NULL,	"lsr",		S_SOP,		0,	0x44	},
+    {	NULL,	"eim",		S_SOP,		0,	0x45	},
     {	NULL,	"ror",		S_SOP,		0,	0x46	},
     {	NULL,	"asr",		S_SOP,		0,	0x47	},
     {	NULL,	"asl",		S_SOP,		0,	0x48	},
     {	NULL,	"lsl",		S_SOP,		0,	0x48	},
     {	NULL,	"rol",		S_SOP,		0,	0x49	},
     {	NULL,	"dec",		S_SOP,		0,	0x4A	},
+    {	NULL,	"tim",		S_SOP,		0,	0x4B	},
     {	NULL,	"inc",		S_SOP,		0,	0x4C	},
     {	NULL,	"tst",		S_SOP,		0,	0x4D	},
     {	NULL,	"clr",		S_SOP,		0,	0x4F	},
@@ -435,6 +449,73 @@ struct	mne	mne[] = {
     {	NULL,	"blt",		S_BRA,		0,	0x2D	},
     {	NULL,	"bgt",		S_BRA,		0,	0x2E	},
     {	NULL,	"ble",		S_BRA,		0,	0x2F	},
+
+		/* New to the 6309 - prebyte 0x10 */
+
+    {	NULL,	"negd",		S_INH1,		0,	0x40	},
+    {	NULL,	"comd",		S_INH1,		0,	0x43	},
+    {	NULL,	"lsrd",		S_INH1,		0,	0x44	},
+    {	NULL,	"rord",		S_INH1,		0,	0x46	},
+    {	NULL,	"asrd",		S_INH1,		0,	0x47	},
+    {	NULL,	"asld",		S_INH1,		0,	0x48	},
+    {	NULL,	"rold",		S_INH1,		0,	0x49	},
+    {	NULL,	"decd",		S_INH1,		0,	0x4A	},
+    {	NULL,	"incd",		S_INH1,		0,	0x4C	},
+    {	NULL,	"tstd",		S_INH1,		0,	0x4D	},
+    {	NULL,	"clrd",		S_INH1,		0,	0x4F	},
+
+    {	NULL,	"comw",		S_INH1,		0,	0x53	},
+    {	NULL,	"lsrw",		S_INH1,		0,	0x54	},
+    {	NULL,	"rorw",		S_INH1,		0,	0x56	},
+    {	NULL,	"rolw",		S_INH1,		0,	0x59	},
+    {	NULL,	"decw",		S_INH1,		0,	0x5A	},
+    {	NULL,	"incw",		S_INH1,		0,	0x5C	},
+    {	NULL,	"tstw",		S_INH1,		0,	0x5D	},
+    {	NULL,	"clrw",		S_INH1,		0,	0x5F	},
+
+    {	NULL,	"subw",		S_LR1,		0,	0x80	},
+    {	NULL,	"cmpw",		S_LR1,		0,	0x81	},
+    {	NULL,	"sbcd",		S_LR1,		0,	0x82	},
+    {	NULL,	"andd",		S_LR1,		0,	0x84	},
+    {	NULL,	"bitd",		S_LR1,		0,	0x85	},
+    {	NULL,	"ldw",		S_LR1,		0,	0x86	},
+    {	NULL,	"stw",		S_STR1,		0,	0x87	},
+    {	NULL,	"eord",		S_LR1,		0,	0x88	},
+    {	NULL,	"adcd",		S_LR1,		0,	0x89	},
+    {	NULL,	"ord",		S_LR1,		0,	0x8A	},
+    {	NULL,	"addw",		S_LR1,		0,	0x8B	},
+
+		/* New to the 6309 - prebyte 0x11 */
+
+    {	NULL,	"bitmd",	S_IMM2,		0,	0x3C	},
+    {	NULL,	"ldmd",		S_IMM2,		0,	0x3D	},
+
+    {	NULL,	"come",		S_INH2,		0,	0x43	},
+    {	NULL,	"dece",		S_INH2,		0,	0x4A	},
+    {	NULL,	"ince",		S_INH2,		0,	0x4C	},
+    {	NULL,	"tste",		S_INH2,		0,	0x4D	},
+    {	NULL,	"clre",		S_INH2,		0,	0x4F	},
+
+    {	NULL,	"comf",		S_INH2,		0,	0x53	},
+    {	NULL,	"decf",		S_INH2,		0,	0x5A	},
+    {	NULL,	"incf",		S_INH2,		0,	0x5C	},
+    {	NULL,	"tstf",		S_INH2,		0,	0x5D	},
+    {	NULL,	"clrf",		S_INH2,		0,	0x5F	},
+
+    {	NULL,	"sube",		S_LR2,		0,	0x80	},
+    {	NULL,	"cmpe",		S_LR2,		0,	0x81	},
+    {	NULL,	"lde",		S_LR2,		0,	0x86	},
+    {	NULL,	"ste",		S_STR2,		0,	0x87	},
+    {	NULL,	"adde",		S_LR2,		0,	0x8B	},
+    {	NULL,	"divd",		S_LR2,		0,	0x8D	},
+    {	NULL,	"muld",		S_LR2,		0,	0x8F	},
+
+    {	NULL,	"subf",		S_LR2,		0,	0xC0	},
+    {	NULL,	"cmpf",		S_LR2,		0,	0xC1	},
+    {	NULL,	"ldf",		S_LR2,		0,	0xC6	},
+    {	NULL,	"stf",		S_STR2,		0,	0xC7	},
+    {	NULL,	"addf",		S_LR2,		0,	0xCB	},
+
     {	NULL,	"bsr",		S_BRA,		S_EOL,	0x8D	}
 };
 
