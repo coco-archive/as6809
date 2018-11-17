@@ -41,3 +41,6 @@ del ..\..\..\asxxmisc\*.o
 del ..\..\..\s19os9\*.o
 del ..\..\..\asxxsrc\*.o
 del ..\misc\*.lst
+del /q as*
+del /q s19os9
+ 

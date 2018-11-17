@@ -42,4 +42,7 @@ del ..\..\..\s19os9\*.o
 del ..\..\..\asxxsrc\*.o
 del ..\misc\*.lst
 del /q ..\exe\as*
+del /q ..\exe\si9os9
+del /q as*
+del /q s19os9
 
