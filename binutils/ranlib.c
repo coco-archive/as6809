@@ -78,7 +78,6 @@ typedef struct _file_t {
 static FILE *tmpfp;
 static symbol_t **symbols, **symtail;
 static file_t *files, *filtail;
-static char tmpfilename[sizeof(TMP_FILE)];
 static char *opt_arch, *opt_mach, *fname;
 static int hashsize, hashmask;
 static int opt_nohash, opt_strip, opt_deterministic;
@@ -124,10 +123,6 @@ static void cleanuptemp(void)
 	if (tmpfp != NULL) {
 		FCLOSE(tmpfp);
 		tmpfp = NULL;
-	}
-	if (*tmpfilename != 0) {
-		remove(tmpfilename);
-		*tmpfilename = 0;
 	}
 }
 
@@ -298,7 +293,7 @@ static void ranlib(char *filename)
 	long begin, offset, indexsize, objoff, size;
 	unsigned long maxoffset;
 	symbol_t *symbol, *symbol2, *next;
-	int fd, digit, begdigit, diff, changed, h, i, j, err, ret, hashbit;
+	int digit, begdigit, diff, changed, h, i, j, err, ret, hashbit;
 	size_t len, len2, nsymbols;
 
 	/* Free previous symbols if any. */
@@ -362,15 +357,7 @@ static void ranlib(char *filename)
 		error("something goes wrong with header processing");
 
 	/* Create and open temp file. */
-	strcpy(tmpfilename, TMP_FILE);
-	fd = mkstemp(tmpfilename);
-	if (fd < 0)
-		error("cannot create temp file");
-#ifdef ZLIBARCH
-	tmpfp = FDOPEN(fd, (!FDIRECT(fp) && opt_gzip == 0) || (opt_gzip > 0) ? "w" : "wT");
-#else
-	tmpfp = FDOPEN(fd, "r+");
-#endif
+  tmpfp= tmpfile();
 	if (tmpfp == NULL)
 		error("cannot open temp file");
 
@@ -571,15 +558,10 @@ static void ranlib(char *filename)
 #ifdef ZLIBARCH
 	/* We must reopen the temp file for reading, because zlib */
 	/* don't support reading and writing on the same file. */
-	err = FCLOSE(tmpfp);
-	tmpfp = NULL;
-	if (err)
-		error("closing temp file failed");
-	/* The temp file is opened for reading with pure stdio, */
-	/* we only do a file copy here. */
-	tmpfpr = fopen(tmpfilename, "r");
+
+	tmpfp = freopen( NULL, "r", tmpfp );
 	if (tmpfpr == NULL)
-		error("cannot open temp file");
+		error("cannot freopen temp file");
 #else
 	/* No zlib, so set the temp file offet to zero. */
 	tmpfpr = tmpfp;

@@ -32,7 +32,6 @@
 #  define FWRITE(ptr, size, nmemb, stream) ((size_t)(gzwrite((gzFile)(stream), (ptr), (size)*(nmemb))/(size)))
 #  define FPUTS(str, stream) (gzputs((gzFile)(stream), (str)))
 #  define FPRINTF(stream, ...) (gzprintf((gzFile)(stream), __VA_ARGS__))
-#  define FDOPEN(fd, mode) ((FILE*)gzdopen((fd), (mode)))
 #  define FDIRECT(stream) (gzdirect((gzFile)(stream)))
 #  if !defined(ZLIBARCH_STATIC) && !defined(ZLIBARCH_DEFINE)
 extern int _gzerror(gzFile file);
@@ -67,6 +66,5 @@ gzFile file;
 #  define FWRITE fwrite
 #  define FPUTS fputs
 #  define FPRINTF fprintf
-#  define FDOPEN fdopen
 #  endif
 #endif
